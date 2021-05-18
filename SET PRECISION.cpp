@@ -10,7 +10,7 @@ int main()
     freopen("output.txt", "w", stdout);
 #endif
     ll t;
-    cout<<fixed<<setprecision(8);  // WE CAN FIX THE SETPRECISION FOR ALL THE DOUBLES THAT WILL BEUN THE PROGRAM
+    cout<<fixed<<setprecision(8);  // WE CAN FIX THE SETPRECISION FOR ALL THE DOUBLES THAT WILL BE RUN THE PROGRAM
     cin>>t;
     while(t--)
     {
