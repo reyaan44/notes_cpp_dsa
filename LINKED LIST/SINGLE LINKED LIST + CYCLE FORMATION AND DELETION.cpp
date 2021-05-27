@@ -110,7 +110,7 @@ node* reverseKNodes(node* & head, ll k)     // FOR EG, 1->2->3->4->5->6->7->NULL
 {
   node *prev=NULL,*curr=head,*nxt;
   ll count=0;
-  while(curr!=NULL && count<k)      // REVERSING K NODES AND THEN MAKING ANOTHER ECCURSIVE FUNCTION
+  while(curr!=NULL && count<k)      // REVERSING K NODES AND THEN MAKING ANOTHER RECCURSIVE FUNCTION
   {
     nxt = curr->next;
     curr->next = prev;
