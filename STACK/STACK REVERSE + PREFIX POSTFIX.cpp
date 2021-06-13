@@ -266,10 +266,10 @@ bool balancedParenthesis(string s)
 int main()
 {
     quick;
-#ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-#endif
+// #ifndef ONLINE_JUDGE
+//     freopen("input.txt", "r", stdin);
+//     freopen("output.txt", "w", stdout);
+// #endif
 
     string str = "Hey, how are you doing?";         // REVERSING THE SENTENCE WITH STACK
     revrseSentence(str);
