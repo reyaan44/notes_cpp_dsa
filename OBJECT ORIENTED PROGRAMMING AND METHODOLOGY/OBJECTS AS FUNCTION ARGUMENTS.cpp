@@ -16,7 +16,7 @@ public:
 };
 void timea :: t(timea t1, timea t2)
 {
-    milliseconds = t1.milliseconds + t2.milliseconds; // t3.milliseconds not necessary becoz it called the function, ao by default it will take it
+    milliseconds = t1.milliseconds + t2.milliseconds; // t3.milliseconds not necessary becoz it called the function, so by default it will take it implicitly
     seconds = milliseconds/100;
     milliseconds = milliseconds % 100;
     seconds+=t1.seconds+t2.seconds;

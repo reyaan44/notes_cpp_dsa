@@ -8,6 +8,7 @@
 #define timetaken cerr<<fixed<<setprecision(10); cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl
 using namespace std;
 const ll M = 1000000007;
+// CONCEPT = KOI EK HISTOGRAM TO PURRA AAYEGA HI, TABHI SABSE BADA AAYEGA ANSWER MAI, APAN KO EK ITERATION MAI HAR BAAR US EK HISTOGRAM KO PUUA MAAN KAR MAXIMUM RECTANGLE NIKAALNA HAI
 int largestRectangleArea(vector<ll>& heights) 
     {
         vector<ll> left(heights.size());
