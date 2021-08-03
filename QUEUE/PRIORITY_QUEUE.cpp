@@ -28,7 +28,7 @@ int main()
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
 #endif
-    priority_queue<ll> dq1;         // IN PRIORITY QUEUE, first element of the queue is the greatest of all elements in the queue and elements are in non increasing order
+    priority_queue<ll> dq1;   // MAX HEAP      // IN PRIORITY QUEUE, first element of the queue is the greatest of all elements in the queue and elements are in non increasing order
     dq1.push(1);
     dq1.push(2);
     dq1.push(100);
