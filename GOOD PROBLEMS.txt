@@ -1,0 +1,6 @@
+1. https://codeforces.com/contest/719/problem/B
+SOL : https://codeforces.com/contest/719/submission/124822951
+2. https://www.codechef.com/problems/PRGCUP01
+SOL : https://www.codechef.com/viewsolution/49460895
+3. https://www.codechef.com/problems/CHEFRRUN (KOSARAJU'S ALGORITHM)
+SOL : https://www.codechef.com/viewsolution/49553064
