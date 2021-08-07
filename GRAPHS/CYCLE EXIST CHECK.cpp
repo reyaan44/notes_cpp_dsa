@@ -14,48 +14,63 @@
 #define forl(i,a,b) for(ll i=a; i<b; ++i)
 #define timetaken cerr<<fixed<<setprecision(10); cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl
 using namespace std;
-map<ll,vector<ll>> adj;
-map<ll,bool> visited;
-bool check = 0;
-bool isCycleInGraph(ll a, ll parent)    // PARENT IS INCLUDED TO CHECK THE CYCLE
+const ll M = 1000000007;
+inline bool comp(ll x,ll y)
 {
-    visited[a]=1;
-    for(auto itr = adj[a].begin(); itr!=adj[a].end(); itr++)
+    return x<y; // INITIALLY IN DEFAULT INCREASING ORDER (SMALL TO BIG)
+}
+inline ll mod(ll x)
+{
+    return (x%M + M)%M;
+}
+vector<ll> adj[10001];
+ll in[10001];
+vector<ll> ans;
+bool kahn(ll n)
+{
+    priority_queue<ll,vector<ll>,greater<ll>> q;
+    for(ll i=1; i<=n; i++)
     {
-        if(visited[*itr]==0)
-        {
-            if(isCycleInGraph(*itr,a)) return true;
-        }
-        else if(parent!=*itr) return true;  // IF NODE'S EDGES ARE CONNECTED TO THE PARENT, THEN NO PROBLEM, BUT IF IT IS CONNECTED TO A NODE THAT IS NOT PARENT AS WELL AS VISITED IN THE PAST, THEN IT INDICATES A CYCLE AND CURRENT EDGE IS A BACKEDGE
-                                            // IN SHORT, THERE SHOULD NOT BE MORE THAN ONE WAY TO REACH A TO B IN A GRAPH, OTHERWISE IT IS A CYCLE
+        if(in[i]==0) q.push(i);
     }
-    return false;
+    while(!q.empty())
+    {
+        ll a = q.top();
+        q.pop();
+        ans.pb(a);
+        for(ll i=0; i<adj[a].size(); i++)
+        {   
+            in[adj[a][i]]--;
+            if(in[adj[a][i]]==0) q.push(adj[a][i]);
+        }
+    }
+    return n==ans.size();
 }
 int main()
 {
-    cout<<"NUMBER OF EDGES : ";
-    ll n; cin>>n;
-    for(ll i=0; i<n; i++)
+    quick;
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    ll n,e;
+    cin>>n>>e;
+    for(ll i=0; i<e; i++)
     {
-        ll a,b;
-        cin>>a>>b;
-        adj[a].pb(b);
-        adj[b].pb(a);
-        visited[a]=0;
-        visited[b]=0;
+        ll x,y;
+        cin>>x>>y;
+        adj[x].push_back(y);
+        in[y]++;
     }
-    for(auto itr = visited.begin(); itr!=visited.end(); itr++)  // FOR DISCONNECTED GRAPH
+    if(kahn(n))
     {
-        if(itr->second==0)
+        for(ll i=0; i<ans.size(); i++)
         {
-            if(isCycleInGraph(itr->first,-1))  // GIVING PARENT -1 AS IT HAS NO PARENT IN THE BEGINNING AS WE ARE CONSIDERRING THIS A ROOT
-            {
-                check=1;
-                break;
-            }
+            cout<<ans[i]<<" ";
         }
+        cout<<endl;
     }
-    if(check) cout<<"CYCLE EXISTS"<<endl;
-    else cout<<"CYCLE DOES NOT EXIST"<<endl;
+    else cout<<"Sandro fails."<<endl;
+    timetaken;
     return 0;
 }
