@@ -28,3 +28,5 @@ HEAD IS LIKE THE POINTER TO WHICH WE ARE FOCUSING CURRENTLY, FOR EG. IF HEAD IS 
 25.  ADDING URL FROM UPSTREAM == git remote add upstream [LINK OF REAL REPO(NOT FORKED)]
 26.  REMOVING A COMMIT FROM PULL REQUEST BY FORCE == git push origin master -f
 27.  SQUASH COMMITS == git rebase -i [COMMIT HASH ABOVE WHICH WE WILL WORK], AFTER THAT ALL THE SQUASH WILL MOVE TO THE ABOVE PICK OF THEM
+28. If you wish to set tracking information for this branch you can do so with:
+    git branch --set-upstream-to=origin/<branch> <remote branch>

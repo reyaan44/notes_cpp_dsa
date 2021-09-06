@@ -4,3 +4,7 @@ SOL : https://codeforces.com/contest/719/submission/124822951
 SOL : https://www.codechef.com/viewsolution/49460895
 3. https://www.codechef.com/problems/CHEFRRUN (KOSARAJU'S ALGORITHM)
 SOL : https://www.codechef.com/viewsolution/49553064
+4. https://codeforces.com/contest/1056/problem/B
+SOL : https://codeforces.com/contest/1056/submission/125910772
+5.https://codeforces.com/contest/1163/problem/B2
+SOL : https://codeforces.com/contest/1163/submission/126066533
