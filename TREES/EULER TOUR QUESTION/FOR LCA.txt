@@ -1,0 +1,29 @@
+https://cp-algorithms.com/graph/lca.html
+
+CODE :
+void euler_tour(ll a, vector<ll> & eutor) 
+{
+    visited[a] = 1;
+    eutor.pb(a);
+    for(ll i=0; i<adj[a].size(); i++) 
+    {
+        if (visited[adj[a][i]]==0) 
+        {
+            euler_tour(adj[a][i], eutor);
+            eutor.pb(a);
+        }
+    }
+}
+
+HERE, EACH NODE OCCURS MULTIPLE TIMES IN THE EULER VECTOR. IT CANNOT BE USED FOR RANGE QUERIES FOR GCD, MIN, MAX.
+HERE, WE CAN GET THE LCA OF TWO NODES IN O(LOGN) TIME AFTER DOING AN O(N) TRAVERSAL. WE ARE GIVEN TWO NODES V1 AND V2. WE WILL FIND THE VERY FIRST OCCURENCE OF BOTH THESE NODES IN THE EULER VECTOR. SUPPOSE WE GET POS1 AND POS2. NOW WE ONLY NEED TO FIND THE VERTEX WITH THE SMALLEST HEIGHT BETWEEN POS1 AND POS2. WE CAN DO THIS BY GETTING HEIGHT ARRAY BEFOREHAND AND MAKING A SEGMENT TREE FOR MIN RANGE QUERIES.
+
+EXAMPLE : 
+INPUT - 
+5
+1 2
+1 3
+3 4
+3 5
+OUTPUT - 
+1 2 1 3 4 3 5 3 1 

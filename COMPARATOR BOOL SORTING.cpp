@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 #define ll long long int
 using namespace std;
-bool comp(int x, int y)
+bool comp(int x, int y)// This “comparator” function returns a value; convertible to bool, which basically tells us whether the passed “first” argument should be placed before the passed “second” argument or not. 
 {
     int count1 =0, count2=0;
     while(x>0)

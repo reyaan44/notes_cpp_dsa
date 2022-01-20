@@ -1,0 +1,32 @@
+PROBLEM : https://www.codechef.com/CSNS21B/problems/DLTNODE
+
+LINK : https://www.codechef.com/viewsolution/53471158
+
+TYPE : HERE, WE WILL REPEAT THE LEAF NODES ALSO TWICE, AND A NODE IS APPEARED MAXIMUM TWO TIMES IN THE TOUR.
+SO, WE CAN SURELY DETERMINE THE NODES WHICH ARE IN THE SUBTREE. OPERATIONS WHOCH DO NOT AFFECT REPEATING SUCH AS GCD, MINIMUM, MAXIMUM CAN BE PERFORMED ON TREE QUERIES WITH EASE. OPERATIONS SUCH AS ADDITION CAN BE PERFORMED BECAUSE EVERY NODE IN ITS SUBTREE IS APPEARING TWICE, SO WE WILL JUST DIVIDE THE ANSWER BY 2.
+
+CODE : 
+void eurelian_tour(ll a, ll prev, vector<ll> & eutour)
+{
+    visited[a] = 1;
+    eutour.pb(a);
+    for(ll i=0; i<adj[a].size(); i++)
+    {
+        if(visited[adj[a][i]]==0)
+        {
+            eurelian_tour(adj[a][i], a, eutour);
+        }
+    }
+    eutour.pb(a);
+}
+(IGNORE PREV, NO USE HERE)
+
+EXAMPLE : 
+INPUT - 
+5
+1 2
+1 3
+3 4
+3 5
+OUTPUT OF EULER TOUR - 
+1 2 2 3 4 4 5 5 3 1
