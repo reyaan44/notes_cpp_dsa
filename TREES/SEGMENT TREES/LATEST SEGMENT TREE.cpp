@@ -29,32 +29,77 @@ inline ll ncr(ll n, ll r) { if(n<r) return 0; return mod(inversePrimeModular(mod
 vector<ll> LIS(vector<ll> &vect) { ll n = vect.size();vector<ll> dp(n+1,LLONG_MAX), curr_idx(n+1,0), prev_idx(n,-1); dp[0] = LLONG_MIN; for(ll i=0; i<n; i++) { ll j = lower_bound(all(dp), vect[i]) - dp.begin(); if(dp[j]>vect[i]) { dp[j] = vect[i]; curr_idx[j] = i; if(dp[j-1]!=LLONG_MIN) prev_idx[i] = curr_idx[j-1]; } } for(ll i=n; i>=0; i--) { if(dp[i]<LLONG_MAX) { ll pos = curr_idx[i]; vector<ll> seq; while(pos!=-1) { seq.pb(vect[pos]); pos = prev_idx[pos]; } reverse(all(seq)); return seq; } } return {vect[0]}; }
 struct custom_hash { static uint64_t splitmix64(uint64_t x)  { x += 0x9e3779b97f4a7c15; x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9; x = (x ^ (x >> 27)) * 0x94d049bb133111eb; return x ^ (x >> 31); } size_t operator()(uint64_t x) const { static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count(); return splitmix64(x + FIXED_RANDOM); }};
 void sieve(ll n) { for(ll i=1; i<=n; i++) smallestPrimeFactor[i] = i; for(ll i=2; (i*i)<=n; i++) { if(smallestPrimeFactor[i]==i) { for(ll j=(i*i); j<=n; j+=i) { smallestPrimeFactor[j] = min(smallestPrimeFactor[j], i); } } } for(ll i=2; i<=n; i++) { if(smallestPrimeFactor[i]==i) isPrimeSieve[i] = 1; } }
-class Union
+class segmentTree
 {
 public:
-    vector<ll> _rank,par;
-    void initialize(ll n)
+    segmentTree *left, *right;
+    ll start, end;
+    ll sum, lazySum;
+    segmentTree(vector<ll> & vect, ll l, ll r)
     {
-        _rank.assign(n+1,1);
-        par.assign(n+1,0);
-        for(ll i=1; i<=n; i++)
+        start = l;
+        end = r;
+        if(l==r)
         {
-            par[i]=i;
+            sum = vect[l];
+            lazySum = 0;
+        }
+        else
+        {
+            ll mid = l + (r - l)/2;
+            left = new segmentTree(vect, l ,mid);
+            right = new segmentTree(vect, mid+1, r);
+            sum = left->sum + right->sum;
+            lazySum = 0;
         }
     }
-    ll find(ll a)
+    ll getSum(ll l, ll r)
     {
-        if(par[a]==a) return a;
-        else return par[a] = find(par[a]);
+        if(lazySum!=0)
+        {
+            ll curr = lazySum;
+            lazySum = 0;  
+            sum += curr*(end-start+1); 
+            if(start!=end)
+            {
+                left->lazySum += curr;  
+                right->lazySum += curr;
+            }
+        }
+        if(l<=start && r>=end) return sum;
+        if(l>end || r<start) return 0;
+        return left->getSum(l,r) + right->getSum(l,r);
     }
-    void merge(ll a, ll b)
+    void update(ll l, ll r, ll add)
     {
-        a = find(a);
-        b = find(b);
-        if(a==b) return;
-        if(_rank[a]<_rank[b]) swap(a,b);
-        par[b] = a;
-        _rank[a]+=_rank[b];
+        if(lazySum!=0)
+        {
+            ll curr = lazySum;
+            lazySum = 0;
+            sum += curr*(end-start+1);
+            if(start!=end)
+            {
+                left->lazySum += curr;
+                right->lazySum += curr;
+            }
+        }
+        if(l>end || r<start) return;
+        if(l<=start && r>=end)
+        {
+            sum += (end-start+1)*add;
+            if(start!=end)
+            {
+                (left->lazySum)+=add;
+                (right->lazySum)+=add;
+            }
+            return;
+        }
+        if(start!=end)
+        {
+            left->update(l,r,add);
+            right->update(l,r,add);
+        }
+        sum = left->sum + right->sum;
     }
 };
 int main()
