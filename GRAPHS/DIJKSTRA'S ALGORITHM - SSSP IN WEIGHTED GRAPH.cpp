@@ -21,19 +21,19 @@ int main()
     }
     priority_queue<pair<ll,ll>, vector<pair<ll,ll>>, greater<pair<ll,ll>>> q1; // FOR PAIRS, AND VECTOR AND GREATER INT FOR MIN HEAP
     q1.push({0,1});     // DISTANCE, NODE
-    dis[1] = 0;     // CONSIDERING 1 AS SOURCE VERTEX   
     while(!q1.empty())
     {
         ll node = q1.top().second;
         ll distance = q1.top().first;
         q1.pop();
+        if(dis[node]!=LLONG_MAX) continue;
+        dis[node] = distance;
         for(ll i=0; i<adj[node].size(); i++)
         {
-            if(distance + adj[node][i].second < dis[adj[node][i].first])    // CHECKING THE NEW DISTANCE EVERYTIME
-            {
-                dis[adj[node][i].first] = distance + adj[node][i].second;
-                q1.push({dis[adj[node][i].first], adj[node][i].first});
-            }
+            ll child = adj[node][i].first;
+            ll edge = adj[node][i].second;
+            if(dis[child]!=LLONG_MAX) continue;
+            q1.push({distance + edge, child});
         }
     }
     for(ll i=1; i<=n; i++)

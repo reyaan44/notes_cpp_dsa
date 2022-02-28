@@ -59,93 +59,73 @@ int main()
     freopen("error.txt", "w", stderr);
 #endif
     /*
-    Bellman Ford Algorithm
-    1. Find SSSP In weighted graphs with negative weights as well
-    2. Detect Negative Cycles
+        FINDING NEGATIVE CYCLE (ANY ONE) USING BELLMAN-FORD ALGORITHM
     */
     ll n,m;
     cin>>n>>m;
-    vector<vector<ll>> edges;
-    vector<vector<ll>> adj(n);
+    vector<vector<ll>> edge;
+    vector<ll> prev(n+1,-1);
+    vector<ll> dis(n+1,LLONG_MAX);
     for(ll i=0; i<m; i++)
     {
         ll a,b,c;
         cin>>a>>b>>c;
-        a--;
-        b--;
-        adj[a].pb(b);
-        edges.pb({a,b,c});
+        edge.pb({a,b,c});
     }
-    vector<ll> dist(n,LLONG_MAX);
-    vector<ll> prev_node(n,0);  // storing the previous node from which distance is smallest
-    dist[0] = 0;    // imp
-    // LEMMA IS THAT, AFTER KTH PHASE, BELLMAN-FORD ALGORITHM CORRECTLY FINDS ALL 
-    // SHORTEST PATHS WHOSE NUMBER OF EDGES ARE LESS THAN OR EQUAL TO K
-    // THATS WHY, WE ARE RUNNING A LOOP N-1 TIMES.
-    for(ll i=0; i<n-1; i++)
+    for(ll k=1; k<=n; k++)  // WHEN ROOT IS NOT DEFINED/GIVEN
     {
-        for(ll j=0; j<m; j++)
+        if(dis[k]!=LLONG_MAX) continue;
+        bool check = 1;
+        dis[k] = 0;
+        for(ll i=0; i<n-1 && check; i++)
         {
-            ll start = edges[j][0];
-            ll end = edges[j][1];
-            ll len = edges[j][2];
-            if(dist[start]!=LLONG_MAX && dist[end] > len + dist[start])
+            check = 0;  // TO REDUCE AVERAGE TIME COMPLEXITY. WHEN NO B IS UPDATED WITH A, IT IS NOT OPTIMAL TO DO ALL N-1 OPERATIONS
+            for(ll j=0; j<m; j++)
             {
-                dist[end] = dist[start] + len;
-                prev_node[end] = start;
-            }
-        }
-    }
-    bool check = 1;
-    vector<ll> cycle_nodes;
-    for(ll j=0; j<m; j++)   // In n-1 turns, we must get the answer, so if on the nth turn as well we are getting something / improving something / relaxing something, then we have a negative cycle
-    {
-        ll start = edges[j][0];
-        ll end = edges[j][1];
-        ll len = edges[j][2];
-        if(dist[start]!=LLONG_MAX && dist[end] > len + dist[start])
-        {
-            check = 0;
-            cycle_nodes.pb(end); // either the node next to the end of negative cycle or inside the cycle
-        }
-    }
-    if(!check)
-    {
-        for(ll i=0; i<n; i++)
-        {
-            for(ll j=0; j<cycle_nodes.size(); j++)
-            {
-                cycle_nodes[j] = prev_node[cycle_nodes[j]]; // to bring the nodes from next to the end of the cycle to in the cycle
-            }
-        }
-        queue<ll> q;
-        for(ll i=0; i<cycle_nodes.size(); i++)
-        {
-            dist[cycle_nodes[i]] = LLONG_MIN;   // -INF
-            q.push(cycle_nodes[i]);
-        }
-        while(!q.empty())   // Running a BFS to make all the nodes  -INF reachable from negative cycles
-        {
-            ll a = q.front();
-            q.pop();
-            for(ll i=0; i<adj[a].size(); i++)
-            {
-                if(dist[a]==LLONG_MIN && dist[adj[a][i]]!=LLONG_MIN)
+                ll a = edge[j][0];
+                ll b = edge[j][1];
+                ll len = edge[j][2];
+                if(dis[a]!=LLONG_MAX && (dis[a] + len < dis[b]))
                 {
-                    dist[adj[a][i]] = LLONG_MIN;
-                    q.push(adj[a][i]);
+                    dis[b] = dis[a] + len;
+                    prev[b] = a;
+                    check = 1;
                 }
             }
         }
+        ll node = -1;
+        for(ll j=0; j<m; j++)   // FINDING NEGATIVE CYCLE NODE
+        {
+            ll a = edge[j][0];
+            ll b = edge[j][1];
+            ll len = edge[j][2];
+            if(dis[a]!=LLONG_MAX && (dis[a] + len < dis[b]))
+            {
+                node = b;
+                prev[b] = a;
+                break;
+            }
+        }
+        if(node==-1) continue;
+        for(ll i=0; i<n; i++) node = prev[node];    // TO GET NODE INTO CYCLE
+        vector<ll> cycle;
+        for(ll curr = node; ; curr = prev[curr])   
+        {
+            cycle.pb(curr);
+            if(curr==node && cycle.size()>1) break;
+        }
+        cout<<"YES"<<endl;
+        reverse(all(cycle));
+        printit(cycle, cycle.size());
+        return 0;
     }
-    if(dist[n-1]==LLONG_MIN) cout<<"-1"<<endl;
-    else cout<<dist[n-1]<<endl;
+    cout<<"NO"<<endl;
     timetaken;
     return 0;
 }
 /*
-
-
+ 
+ 
 1. Binary Search / Binary Search on Answer
 2. Bit
 3. Parity (Odd / Even)
