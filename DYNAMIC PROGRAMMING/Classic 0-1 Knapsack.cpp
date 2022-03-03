@@ -57,6 +57,7 @@ int main()
         }
         cout<<endl;
     }
+    dbg(dp);
     cout<<dp[n][W]<<endl;
     timetaken;
     return 0;
