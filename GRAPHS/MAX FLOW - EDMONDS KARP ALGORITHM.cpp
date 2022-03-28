@@ -14,33 +14,49 @@
 #define forl(i,a,b) for(ll i=a; i<b; ++i)
 #define timetaken cerr<<fixed<<setprecision(10); cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl
 using namespace std;
-vector<ll> adj[100001];
+#ifndef ONLINE_JUDGE
+#define dbg(x) cerr << #x << " : "; _print_(x);cerr << endl;
+#else
+#define dbg(x)
+#endif
+void _print_(ll t) {cerr << t;}
+void _print_(int t) {cerr << t;}
+void _print_(string t) {cerr << t;}
+void _print_(char t) {cerr << t;}
+void _print_(ld t) {cerr << t;}
+void _print_(double t) {cerr << t;}
+template <class T, class V> void _print_(pair <T, V> p);
+template <class T> void _print_(vector <T> v);
+template <class T> void _print_(set <T> v);
+template <class T, class V> void _print_(map <T, V> v);
+template <class T> void _print_(multiset <T> v);
+template <class T, class V> void _print_(pair <T, V> p) {cerr << "{"; _print_(p.ff); cerr << ","; _print_(p.ss); cerr << "}";}
+template <class T> void _print_(vector <T> v) {cerr << "[ "; for (T i : v) {_print_(i); cerr << " ";} cerr << "]";}
+template <class T> void _print_(set <T> v) {cerr << "[ "; for (T i : v) {_print_(i); cerr << " ";} cerr << "]";}
+template <class T> void _print_(multiset <T> v) {cerr << "[ "; for (T i : v) {_print_(i); cerr << " ";} cerr << "]";}
+template <class T, class V> void _print_(map <T, V> v) {cerr << "[ "; for (auto i : v) {_print_(i); cerr << " ";} cerr << "]";}
+vector<vector<ll>> adj(501);
 ll n;
-vector<vector<ll>> capacity(100001);
+vector<vector<ll>> capacity(501);
 ll bfs(ll start, ll end, vector<ll> & parent)
 {
     parent.assign(n+1,-1);
-    parent[start]=-2;   
-    queue<pair<ll,ll>> q;
-    q.push({start,LLONG_MAX});
-
+    parent[start] = 0;   
+    queue<ll> q;
+    q.push(start);
+    ll flow = LLONG_MAX;
     while(!q.empty())
     {
-        ll curr = q.front().first;
-        ll flow = q.front().second;
+        ll curr = q.front();
         q.pop();
-
-        for(ll i = 0; i<adj[curr].size(); i++)
+        for(auto next: adj[curr])
         {
-            if(parent[adj[curr][i]]==-1 && capacity[curr][adj[curr][i]])    // PARENT IS -1 MEANS NOT VISITED, CAPACITY[CURR].. MEANS THE NEXT EDGE TO IT IN ADJACENCY LIST
+            if(parent[next]==-1 && capacity[curr][next])    // PARENT IS -1 MEANS NOT VISITED, CAPACITY[CURR].. MEANS THE NEXT EDGE TO IT IN ADJACENCY LIST
             {
-                parent[adj[curr][i]]=curr;
-                ll new_flow = min(flow,capacity[curr][adj[curr][i]]);
-                if(adj[curr][i]==end)
-                {
-                    return new_flow;
-                }
-                q.push({adj[curr][i], new_flow});
+                parent[next] = curr;
+                flow = min(flow, capacity[curr][next]);
+                if(next==end) return flow;
+                q.push(next);
             }
         }
     }
@@ -49,13 +65,13 @@ ll bfs(ll start, ll end, vector<ll> & parent)
 ll max_flow(ll start, ll end)
 {
     ll flow = 0;
-    vector<ll> parent(n+1,0);   // PARENT ARRAY
+    vector<ll> parent(n+1);
     ll new_flow;
-    while(new_flow = bfs(start, end, parent))
+    while(new_flow = bfs(start, end, parent))   // FINDING AUGUMENTING PATH
     {
         flow+=new_flow;
         ll curr = end;  
-        while(curr!=start)  // BACKTRACK
+        while(curr!=start)
         {
             ll prev = parent[curr];        
             capacity[prev][curr]-=new_flow; // IN RESIDUAL, THIS MUCH IS USED
@@ -65,18 +81,19 @@ ll max_flow(ll start, ll end)
     }
     return flow;
 }
+// https://cp-algorithms.com/graph/edmonds_karp.html
 int main()
 {
     quick;
 #ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
+    freopen("error.txt", "w", stderr);
 #endif
     ll m;
     cin>>n>>m;
-    ll source, sink;    // START, END
-    cin>>source>>sink;
-    for(ll i=0; i<n+1; i++)
+    ll source = 1, sink = n;    // START, END
+    for(ll i=0; i<=n; i++)
     {
         capacity[i] = vector<ll>(n+1,0);    // INITITALIZING 2D VECTOR FOR STORING RESIDUAL CAPACITY
                                             // RESIDUAL CAPACITY MEANS THE LEFT SPACE WHICH CAN NE FILLED IN AN EDGE
@@ -86,7 +103,8 @@ int main()
         ll a,b,w;
         cin>>a>>b>>w;   // W IS MAXIMUM CAPACITY
         adj[a].pb(b);
-        capacity[a][b]=w;
+        adj[b].pb(a);   // ALTHOUGH DIRECTED, WE MAKE BOTH SIDES
+        capacity[a][b] += w;
     }
     cout<<max_flow(source,sink)<<endl;
     timetaken;
