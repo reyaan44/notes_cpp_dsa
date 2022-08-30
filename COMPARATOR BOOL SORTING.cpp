@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 #define ll long long int
+#define endl "\n"
 using namespace std;
 bool comp(int x, int y)// This “comparator” function returns a value; convertible to bool, which basically tells us whether the passed “first” argument should be placed before the passed “second” argument or not. 
 {
