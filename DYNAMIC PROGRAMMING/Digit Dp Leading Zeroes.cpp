@@ -77,7 +77,7 @@ ll solve(ll n)
     memset(dp, -1, sizeof(dp));
     s = to_string(n);
     n = s.size();
-    return func(n, 1, 0, 9, 0, 0, 1);
+    return func(n, 1, 0, 9, 0, 1, 0);
 }
 /*
 Find the total numbers in the range [L,R] such that, xor
